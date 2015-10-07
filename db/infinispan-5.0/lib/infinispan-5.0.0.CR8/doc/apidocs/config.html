@@ -1,0 +1,1089 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<HEAD>
+<META NAME="description" content="Infinispan configuration options" />
+<TITLE>
+Configuration options (Infinispan Distribution 5.0.0.CR8 API)
+</TITLE>
+<LINK REL="stylesheet" HREF="stylesheet2.css" TYPE="text/css"/>
+</HEAD>
+<BODY>
+<h2>Infinispan configuration options 5.0</h2><br/><div class="source"><pre>  &lt;<a href="#ce__infinispan">infinispan</a>&gt;
+    &lt;<a href="#ce_infinispan_global">global</a>&gt;
+      &lt;<a href="#ce_global_globalJmxStatistics">globalJmxStatistics</a>&gt;
+        &lt;<a href="#ce_globalJmxStatistics_properties">properties</a>&gt;
+      &lt;<a href="#ce_global_replicationQueueScheduledExecutor">replicationQueueScheduledExecutor</a>&gt;
+        &lt;<a href="#ce_replicationQueueScheduledExecutor_properties">properties</a>&gt;
+      &lt;<a href="#ce_global_transport">transport</a>&gt;
+        &lt;<a href="#ce_transport_properties">properties</a>&gt;
+      &lt;<a href="#ce_global_asyncTransportExecutor">asyncTransportExecutor</a>&gt;
+        &lt;<a href="#ce_asyncTransportExecutor_properties">properties</a>&gt;
+      &lt;<a href="#ce_global_serialization">serialization</a>&gt;
+        &lt;<a href="#ce_serialization_advancedExternalizers">advancedExternalizers</a>&gt;
+          &lt;<a href="#ce_advancedExternalizers_advancedExternalizer">advancedExternalizer</a>&gt;
+      &lt;<a href="#ce_global_shutdown">shutdown</a>&gt;
+      &lt;<a href="#ce_global_evictionScheduledExecutor">evictionScheduledExecutor</a>&gt;
+        &lt;<a href="#ce_evictionScheduledExecutor_properties">properties</a>&gt;
+      &lt;<a href="#ce_global_asyncListenerExecutor">asyncListenerExecutor</a>&gt;
+        &lt;<a href="#ce_asyncListenerExecutor_properties">properties</a>&gt;
+    &lt;<a href="#ce_infinispan_default">default</a>&gt;
+      &lt;<a href="#ce_default_transaction">transaction</a>&gt;
+        &lt;<a href="#ce_transaction_recovery">recovery</a>&gt;
+      &lt;<a href="#ce_default_invocationBatching">invocationBatching</a>&gt;
+      &lt;<a href="#ce_default_loaders">loaders</a>&gt;
+        &lt;<a href="#ce_loaders_loader">loader</a>&gt;
+          &lt;<a href="#ce_loader_async">async</a>&gt;
+          &lt;<a href="#ce_loader_properties">properties</a>&gt;
+          &lt;<a href="#ce_loader_singletonStore">singletonStore</a>&gt;
+      &lt;<a href="#ce_default_clustering">clustering</a>&gt;
+        &lt;<a href="#ce_clustering_sync">sync</a>&gt;
+        &lt;<a href="#ce_clustering_l1">l1</a>&gt;
+        &lt;<a href="#ce_clustering_stateRetrieval">stateRetrieval</a>&gt;
+        &lt;<a href="#ce_clustering_async">async</a>&gt;
+        &lt;<a href="#ce_clustering_hash">hash</a>&gt;
+          &lt;<a href="#ce_hash_groups">groups</a>&gt;
+            &lt;<a href="#ce_groups_grouper">grouper</a>&gt;
+      &lt;<a href="#ce_default_storeAsBinary">storeAsBinary</a>&gt;
+      &lt;<a href="#ce_default_deadlockDetection">deadlockDetection</a>&gt;
+      &lt;<a href="#ce_default_lazyDeserialization">lazyDeserialization</a>&gt;
+      &lt;<a href="#ce_default_eviction">eviction</a>&gt;
+      &lt;<a href="#ce_default_dataContainer">dataContainer</a>&gt;
+        &lt;<a href="#ce_dataContainer_properties">properties</a>&gt;
+      &lt;<a href="#ce_default_customInterceptors">customInterceptors</a>&gt;
+        &lt;<a href="#ce_customInterceptors_interceptor">interceptor</a>&gt;
+          &lt;<a href="#ce_interceptor_properties">properties</a>&gt;
+      &lt;<a href="#ce_default_unsafe">unsafe</a>&gt;
+      &lt;<a href="#ce_default_jmxStatistics">jmxStatistics</a>&gt;
+      &lt;<a href="#ce_default_indexing">indexing</a>&gt;
+        &lt;<a href="#ce_indexing_properties">properties</a>&gt;
+      &lt;<a href="#ce_default_locking">locking</a>&gt;
+      &lt;<a href="#ce_default_expiration">expiration</a>&gt;
+</pre></div><div class="section">
+<a name="ce_advancedExternalizers_advancedExternalizer"></a><h3><a name="advancedExternalizer"></a>advancedExternalizer</h3>
+<p>Defines custom Externalizers to be registered with marshalling framework<BR/><BR />The parent element is <a href="#ce_serialization_advancedExternalizers">&lt;advancedExternalizers&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>externalizerClass</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Fully qualified class name of an {@link org.infinispan.marshall.AdvancedExternalizer}
+ implementation that knows how to marshall or unmarshall instances of one, or
+ several, user-defined, types.
+ (<a href="org/infinispan/config/AdvancedExternalizerConfig.html#setExternalizerClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>id</code></td>
+<td><code>int</code></td>
+<td>null</td>
+<td>This identifier distinguishes between different user-defined {@link org.infinispan.marshall.AdvancedExternalizer}
+ implementations, providing a more performant way to ship class information around
+ rather than passing class names or class information in general around.
+
+ Only positive ids are allowed, and you can use any number as long as it does not
+ clash with an already existing number for a {@link org.infinispan.marshall.AdvancedExternalizer} implementation.
+
+ If there're any clashes, Infinispan will abort startup and will provide class
+ information of the ids clashing.
+ (<a href="org/infinispan/config/AdvancedExternalizerConfig.html#setId(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_serialization_advancedExternalizers"></a><h3><a name="advancedExternalizers"></a>advancedExternalizers</h3>
+<p>Configures custom marshallers.<BR/><BR />The parent element is <a href="#ce_global_serialization">&lt;serialization&gt;</a>.  The only child element is <a href="#ce_advancedExternalizers_advancedExternalizer">&lt;advancedExternalizer&gt;</a>.
+</p></div>
+<div class="section">
+<a name="ce_loader_async"></a><h3><a name="async"></a>async</h3>
+<p>Configuration for the async cache loader. If enabled, this provides you with asynchronous writes
+ to the cache store, giving you 'write-behind' caching.<BR/><BR />The parent element is <a href="#ce_loaders_loader">&lt;loader&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>flushLockTimeout</code></td>
+<td><code>long</code></td>
+<td>5000</td>
+<td>Timeout to acquire the lock which guards the state to be flushed to the cache store
+ periodically.
+ (<a href="org/infinispan/loaders/decorators/AsyncStoreConfig.html#setFlushLockTimeout(java.lang.Long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>threadPoolSize</code></td>
+<td><code>int</code></td>
+<td>1</td>
+<td>Size of the thread pool whose threads are responsible for applying the modifications.
+ (<a href="org/infinispan/loaders/decorators/AsyncStoreConfig.html#setThreadPoolSize(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>shutdownTimeout</code></td>
+<td><code>long</code></td>
+<td>25000</td>
+<td>Timeout to stop the cache store. When the store is stopped it's possible that some
+ modifications still need to be applied; you likely want to set a very large timeout to make
+ sure to not loose data
+ (<a href="org/infinispan/loaders/decorators/AsyncStoreConfig.html#setShutdownTimeout(java.lang.Long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, all modifications to this cache store happen asynchronously, on a separate thread.
+ (<a href="org/infinispan/loaders/decorators/AsyncStoreConfig.html#setEnabled(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_clustering_async"></a><h3><a name="async"></a>async</h3>
+<p>If this element is present, all communications are asynchronous, in that whenever a thread sends a message sent
+ over the wire, it does not wait for an acknowledgment before returning. This element is mutually exclusive with
+ the  <code> &lt;sync /&gt;</code> element.<br /> <br /> Characteristics of this can be tuned here.<BR/><BR />The parent element is <a href="#ce_default_clustering">&lt;clustering&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>replQueueClass</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.remoting.ReplicationQueueImpl</td>
+<td>This overrides the replication queue implementation class. Overriding the default allows you to add behavior to
+ the queue, typically by subclassing the default implementation.
+ (<a href="org/infinispan/config/Configuration.html#setReplQueueClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>useReplQueue</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, this forces all async communications to be queued up and sent out periodically as a batch.
+ (<a href="org/infinispan/config/Configuration.html#setUseReplQueue(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>replQueueMaxElements</code></td>
+<td><code>int</code></td>
+<td>1000</td>
+<td>If useReplQueue is set to true, this attribute can be used to trigger flushing of the queue when it reaches a
+ specific threshold.
+ (<a href="org/infinispan/config/Configuration.html#setReplQueueMaxElements(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>replQueueInterval</code></td>
+<td><code>long</code></td>
+<td>5000</td>
+<td>If useReplQueue is set to true, this attribute controls how often the asynchronous thread used to flush the
+ replication queue runs. This should be a positive integer which represents thread wakeup time in milliseconds.
+ (<a href="org/infinispan/config/Configuration.html#setReplQueueInterval(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>asyncMarshalling</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, asynchronous marshalling is enabled which means that caller can return even quicker, but it can suffer
+ from reordering of operations. You can find more information <a href=&quot;http://community.jboss.org/docs/DOC-15725&quot;>here</a>
+ (<a href="org/infinispan/config/Configuration.html#setUseAsyncMarshalling(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_asyncListenerExecutor"></a><h3><a name="asyncListenerExecutor"></a>asyncListenerExecutor</h3>
+<p>Configuration for the executor service used to emit notifications to asynchronous listeners<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_asyncListenerExecutor_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>factory</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.executors.DefaultExecutorFactory</td>
+<td>Fully qualified class name of the ExecutorFactory to use.  Must implement org.infinispan.executors.ExecutorFactory
+ (<a href="org/infinispan/config/GlobalConfiguration.ExecutorFactoryType.html#factory">Javadoc</a>)</td>
+</tr>
+</table>
+<table class="bodyTable"> <tr class="a"><th>Property</th><th>Description</th></tr>
+<tr class="b"><td>threadNamePrefix</td>
+<td>Thread name prefix for threads created by this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+<tr class="b"><td>maxThreads</td>
+<td>Maximum number of threads for this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_asyncTransportExecutor"></a><h3><a name="asyncTransportExecutor"></a>asyncTransportExecutor</h3>
+<p>Configuration for the executor service used for asynchronous work on the Transport, including asynchronous marshalling and Cache 'async operations' such as Cache.putAsync().<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_asyncTransportExecutor_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>factory</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.executors.DefaultExecutorFactory</td>
+<td>Fully qualified class name of the ExecutorFactory to use.  Must implement org.infinispan.executors.ExecutorFactory
+ (<a href="org/infinispan/config/GlobalConfiguration.ExecutorFactoryType.html#factory">Javadoc</a>)</td>
+</tr>
+</table>
+<table class="bodyTable"> <tr class="a"><th>Property</th><th>Description</th></tr>
+<tr class="b"><td>threadNamePrefix</td>
+<td>Thread name prefix for threads created by this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+<tr class="b"><td>maxThreads</td>
+<td>Maximum number of threads for this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_clustering"></a><h3><a name="clustering"></a>clustering</h3>
+<p>Defines clustered characteristics of the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  Child elements are <a href="#ce_clustering_sync">&lt;sync&gt;</a>, <a href="#ce_clustering_l1">&lt;l1&gt;</a>, <a href="#ce_clustering_stateRetrieval">&lt;stateRetrieval&gt;</a>, <a href="#ce_clustering_async">&lt;async&gt;</a>, <a href="#ce_clustering_hash">&lt;hash&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>mode</code></td>
+<td><code>string</code></td>
+<td>DIST_SYNC</td>
+<td>Cache mode. For distribution, set mode to either 'd', 'dist' or 'distribution'. For replication, use either 'r',
+ 'repl' or 'replication'. Finally, for invalidation, 'i', 'inv' or 'invalidation'.  If the cache mode is set to
+ 'l' or 'local', the cache in question will not support clustering even if its cache manager does.
+ When no transport is enabled, the default is 'local' (instead of 'dist').
+ (<a href="org/infinispan/config/Configuration.html#setCacheMode(org.infinispan.config.Configuration.CacheMode)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_customInterceptors"></a><h3><a name="customInterceptors"></a>customInterceptors</h3>
+<p>Configures custom interceptors to be added to the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  The only child element is <a href="#ce_customInterceptors_interceptor">&lt;interceptor&gt;</a>.
+</p></div>
+<div class="section">
+<a name="ce_default_dataContainer"></a><h3><a name="dataContainer"></a>dataContainer</h3>
+<p>This element controls the data container for the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  The only child element is <a href="#ce_dataContainer_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>class</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.container.DefaultDataContainer</td>
+<td>Pluggable data container class which must implement
+ {@link org.infinispan.container.DataContainer}
+ (<a href="org/infinispan/config/Configuration.html#getDataContainerClass)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_deadlockDetection"></a><h3><a name="deadlockDetection"></a>deadlockDetection</h3>
+<p>This element configures deadlock detection.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle to enable/disable deadlock detection
+ (<a href="org/infinispan/config/Configuration.html#setEnableDeadlockDetection(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>spinDuration</code></td>
+<td><code>long</code></td>
+<td>100</td>
+<td>Time period that determines how often is lock acquisition attempted within maximum time allowed to acquire a
+ particular lock
+ (<a href="org/infinispan/config/Configuration.html#setDeadlockDetectionSpinDuration(long)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_infinispan_default"></a><h3><a name="default"></a>default</h3>
+<p>Encapsulates the configuration of a Cache. Configures the default cache which can be retrieved via
+ CacheManager.getCache(). These default settings are also used as a starting point when configuring namedCaches, since
+ the default settings are inherited by any named cache.<BR/><BR />The parent element is <a href="#ce__infinispan">&lt;infinispan&gt;</a>.  Child elements are <a href="#ce_default_transaction">&lt;transaction&gt;</a>, <a href="#ce_default_invocationBatching">&lt;invocationBatching&gt;</a>, <a href="#ce_default_loaders">&lt;loaders&gt;</a>, <a href="#ce_default_clustering">&lt;clustering&gt;</a>, <a href="#ce_default_storeAsBinary">&lt;storeAsBinary&gt;</a>, <a href="#ce_default_deadlockDetection">&lt;deadlockDetection&gt;</a>, <a href="#ce_default_lazyDeserialization">&lt;lazyDeserialization&gt;</a>, <a href="#ce_default_eviction">&lt;eviction&gt;</a>, <a href="#ce_default_dataContainer">&lt;dataContainer&gt;</a>, <a href="#ce_default_customInterceptors">&lt;customInterceptors&gt;</a>, <a href="#ce_default_unsafe">&lt;unsafe&gt;</a>, <a href="#ce_default_jmxStatistics">&lt;jmxStatistics&gt;</a>, <a href="#ce_default_indexing">&lt;indexing&gt;</a>, <a href="#ce_default_locking">&lt;locking&gt;</a>, <a href="#ce_default_expiration">&lt;expiration&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>name</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Only used with the namedCache element, this attribute specifies the name of the cache.  Can be any String, but must be unique in a given configuration.
+ (<a href="org/infinispan/config/Configuration.html#name">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_eviction"></a><h3><a name="eviction"></a>eviction</h3>
+<p>This element controls the eviction settings for the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>wakeUpInterval</code></td>
+<td><code>long</code></td>
+<td>5000</td>
+<td>Interval between subsequent eviction runs, in milliseconds. If you wish to disable the periodic eviction process
+ altogether, set wakeupInterval to -1.
+ (<a href="org/infinispan/config/Configuration.html#setEvictionWakeUpInterval(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>threadPolicy</code></td>
+<td><code>evictionThreadPolicy</code>* (PIGGYBACK|DEFAULT)</td>
+<td>DEFAULT</td>
+<td>Threading policy for eviction.
+ (<a href="org/infinispan/config/Configuration.html#setEvictionThreadPolicy(org.infinispan.eviction.EvictionThreadPolicy)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>strategy</code></td>
+<td><code>evictionStrategy</code>* (NONE|UNORDERED|FIFO|LRU|LRU_OLD|LIRS)</td>
+<td>NONE</td>
+<td>Eviction strategy. Available options are 'UNORDERED', 'FIFO', 'LRU', 'LIRS' and 'NONE' (to disable eviction).
+ (<a href="org/infinispan/config/Configuration.html#setEvictionStrategy(org.infinispan.eviction.EvictionStrategy)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>maxEntries</code></td>
+<td><code>int</code></td>
+<td>-1</td>
+<td>Maximum number of entries in a cache instance. If selected value is not a power of two the actual value will
+ default to the least power of two larger than selected value. -1 means no limit.
+ (<a href="org/infinispan/config/Configuration.html#setEvictionMaxEntries(int)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_evictionScheduledExecutor"></a><h3><a name="evictionScheduledExecutor"></a>evictionScheduledExecutor</h3>
+<p>Configuration for the scheduled executor service used to periodically run eviction cleanup tasks.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_evictionScheduledExecutor_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>factory</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.executors.DefaultScheduledExecutorFactory</td>
+<td>Fully qualified class name of the ScheduledExecutorFactory to use.  Must implement org.infinispan.executors.ScheduledExecutorFactory
+ (<a href="org/infinispan/config/GlobalConfiguration.ScheduledExecutorFactoryType.html#factory">Javadoc</a>)</td>
+</tr>
+</table>
+<table class="bodyTable"> <tr class="a"><th>Property</th><th>Description</th></tr>
+<tr class="b"><td>threadNamePrefix</td>
+<td>Thread name prefix for threads created by this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+<tr class="b"><td>maxThreads</td>
+<td>Maximum number of threads for this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_expiration"></a><h3><a name="expiration"></a>expiration</h3>
+<p>This element controls the default expiration settings for entries in the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>maxIdle</code></td>
+<td><code>long</code></td>
+<td>-1</td>
+<td>Maximum idle time a cache entry will be maintained in the cache, in milliseconds. If the idle time is exceeded,
+ the entry will be expired cluster-wide. -1 means the entries never expire. <br /> <br /> Note that this can be
+ overriden on a per-entry bassi by using the Cache API.
+ (<a href="org/infinispan/config/Configuration.html#setExpirationMaxIdle(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>lifespan</code></td>
+<td><code>long</code></td>
+<td>-1</td>
+<td>Maximum lifespan of a cache entry, after which the entry is expired cluster-wide, in milliseconds. -1 means the
+ entries never expire. <br /> <br /> Note that this can be overriden on a per-entry bassi by using the Cache API.
+ (<a href="org/infinispan/config/Configuration.html#setExpirationLifespan(long)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_infinispan_global"></a><h3><a name="global"></a>global</h3>
+<p>Defines global settings shared among all cache instances created by a single CacheManager.<BR/><BR />The parent element is <a href="#ce__infinispan">&lt;infinispan&gt;</a>.  Child elements are <a href="#ce_global_globalJmxStatistics">&lt;globalJmxStatistics&gt;</a>, <a href="#ce_global_replicationQueueScheduledExecutor">&lt;replicationQueueScheduledExecutor&gt;</a>, <a href="#ce_global_transport">&lt;transport&gt;</a>, <a href="#ce_global_asyncTransportExecutor">&lt;asyncTransportExecutor&gt;</a>, <a href="#ce_global_serialization">&lt;serialization&gt;</a>, <a href="#ce_global_shutdown">&lt;shutdown&gt;</a>, <a href="#ce_global_evictionScheduledExecutor">&lt;evictionScheduledExecutor&gt;</a>, <a href="#ce_global_asyncListenerExecutor">&lt;asyncListenerExecutor&gt;</a>.
+</p></div>
+<div class="section">
+<a name="ce_global_globalJmxStatistics"></a><h3><a name="globalJmxStatistics"></a>globalJmxStatistics</h3>
+<p>This element specifies whether global statistics are gathered and reported via JMX for all
+ caches under this cache manager.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_globalJmxStatistics_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>jmxDomain</code></td>
+<td><code>string</code></td>
+<td>org.infinispan</td>
+<td>If JMX statistics are enabled then all 'published' JMX objects will appear under this name.
+ This is optional, if not specified an object name will be created for you by default.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setJmxDomain(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>cacheManagerName</code></td>
+<td><code>string</code></td>
+<td>DefaultCacheManager</td>
+<td>If JMX statistics are enabled, this property represents the name of this cache manager.
+ It offers the possibility for clients to provide a user-defined name to the cache manager
+ which later can be used to identify the cache manager within a JMX based management tool
+ amongst other cache managers that might be running under the same JVM.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setCacheManagerName(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>allowDuplicateDomains</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, multiple cache manager instances could be configured under the same configured JMX
+ domain. Each cache manager will in practice use a different JMX domain that has been
+ calculated based on the configured one by adding an incrementing index to it.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setAllowDuplicateDomains(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>mBeanServerLookup</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.jmx.PlatformMBeanServerLookup</td>
+<td>Fully qualified name of class that will attempt to locate a JMX MBean server to bind to
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setMBeanServerLookup(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle to enable/disable global statistics being exported via JMX
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setExposeGlobalJmxStatistics(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_groups_grouper"></a><h3><a name="grouper"></a>grouper</h3>
+<p>Grouper definition. See The Grouping API for more details<BR/><BR />The parent element is <a href="#ce_hash_groups">&lt;groups&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>class</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>The grouper class
+ (<a href="org/infinispan/config/GrouperConfiguration.html#setClazz(java.lang.String)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_hash_groups"></a><h3><a name="groups"></a>groups</h3>
+<p>Configuration for various grouper definitions. See the user guide for more information<BR/><BR />The parent element is <a href="#ce_clustering_hash">&lt;hash&gt;</a>.  The only child element is <a href="#ce_groups_grouper">&lt;grouper&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Enable grouping support
+ (<a href="org/infinispan/config/GroupsConfiguration.html#enabled(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_clustering_hash"></a><h3><a name="hash"></a>hash</h3>
+<p>Allows fine-tuning of rehashing characteristics. Only used with 'distributed' cache mode, and otherwise ignored.<BR/><BR />The parent element is <a href="#ce_default_clustering">&lt;clustering&gt;</a>.  The only child element is <a href="#ce_hash_groups">&lt;groups&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>numVirtualNodes</code></td>
+<td><code>int</code></td>
+<td>1</td>
+<td>Controls the number of virtual nodes per "real" node. You can read more about virtual nodes
+ at ...
+ 
+ If numVirtualNodes is 1, then virtual nodes are disabled. The topology aware consistent hash
+ must be used if you wish to take advnatage of virtual nodes.
+ 
+ A default of 1 is used.
+ (<a href="org/infinispan/config/FluentConfiguration.HashConfig.html#numVirtualNodes(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>rehashRpcTimeout</code></td>
+<td><code>long</code></td>
+<td>600000</td>
+<td>Rehashing timeout
+ (<a href="org/infinispan/config/Configuration.html#setRehashRpcTimeout(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>rehashEnabled</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If false, no rebalancing or rehashing will take place when a new node joins the cluster or a node leaves
+ (<a href="org/infinispan/config/Configuration.html#setRehashEnabled(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>rehashWait</code></td>
+<td><code>long</code></td>
+<td>60000</td>
+<td>Future flag. Currenly unused.
+ (<a href="org/infinispan/config/Configuration.HashType.html#rehashWait">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>numOwners</code></td>
+<td><code>int</code></td>
+<td>2</td>
+<td>Number of cluster-wide replicas for each cache entry.
+ (<a href="org/infinispan/config/Configuration.html#setNumOwners(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>class</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Fully qualified name of class providing consistent hash algorithm
+ (<a href="org/infinispan/config/Configuration.html#setConsistentHashClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>hashFunctionClass</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.util.hash.MurmurHash3</td>
+<td>A fully qualified name of the class providing a hash function, used as a bit spreader and a general hash code
+ generator.  Typically used in conjunction with the many default {@link org.infinispan.distribution.ch.ConsistentHash}
+ implementations shipped.
+ (<a href="org/infinispan/config/Configuration.html#setHashFunctionClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_indexing"></a><h3><a name="indexing"></a>indexing</h3>
+<p>Configures indexing of entries in the cache for searching. Note that infinispan-query.jar and its dependencies
+ needs to be available if this option is to be used.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  The only child element is <a href="#ce_indexing_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If enabled, entries will be indexed when they are added to the cache. Indexes will be updated as entries change or
+ are removed.
+ (<a href="org/infinispan/config/Configuration.html#setIndexingEnabled(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>indexLocalOnly</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, only index changes made locally, ignoring remote changes. This is useful if indexes are shared across a
+ cluster to prevent redundant indexing of updates.
+ (<a href="org/infinispan/config/Configuration.html#setIndexLocalOnly(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce__infinispan"></a><h3><a name="infinispan"></a>infinispan</h3>
+<p>InfinispanConfiguration encapsulates root component of Infinispan XML configuration. Can be empty
+ for sensible defaults throughout, however that would only give you the most basic of local,
+ non-clustered caches.<BR/><BR />Child elements are <a href="#ce_infinispan_global">&lt;global&gt;</a>, <a href="#ce_infinispan_default">&lt;default&gt;</a>.
+</p></div>
+<div class="section">
+<a name="ce_customInterceptors_interceptor"></a><h3><a name="interceptor"></a>interceptor</h3>
+<p>Holds information about the custom interceptors defined in the configuration file.<BR/><BR />The parent element is <a href="#ce_default_customInterceptors">&lt;customInterceptors&gt;</a>.  The only child element is <a href="#ce_interceptor_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>index</code></td>
+<td><code>int</code></td>
+<td>-1</td>
+<td>A position at which to place this interceptor in the chain, with 0 being the first position.
+ Note that this attribute is mutually exclusive with 'position', 'before' and 'after'."
+ (<a href="org/infinispan/config/CustomInterceptorConfig.html#setIndex(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>position</code></td>
+<td><code>string</code></td>
+<td>OTHER_THAN_FIRST_OR_LAST</td>
+<td>A position at which to place this interceptor in the chain. FIRST is the first interceptor
+ encountered when an invocation is made on the cache, LAST is the last interceptor before the
+ call is passed on to the data structure. Note that this attribute is mutually exclusive with
+ 'before', 'after' and 'index'.
+ (<a href="org/infinispan/config/CustomInterceptorConfig.html#setPosition(org.infinispan.config.CustomInterceptorConfig.Position)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>class</code></td>
+<td><code>string</code></td>
+<td>-1</td>
+<td>A position at which to place this interceptor in the chain, with 0 being the first position.
+ Note that this attribute is mutually exclusive with 'position', 'before' and 'after'."
+ (<a href="org/infinispan/config/CustomInterceptorConfig.html#setIndex(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>after</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Places the new interceptor directly after the instance of the named interceptor which is
+ specified via its fully qualified class name. Note that this attribute is mutually exclusive
+ with 'position', 'before' and 'index'.
+ (<a href="org/infinispan/config/CustomInterceptorConfig.html#setAfterInterceptor(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>before</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Places the new interceptor directly before the instance of the named interceptor which is
+ specified via its fully qualified class name.. Note that this attribute is mutually exclusive
+ with 'position', 'after' and 'index'."
+ (<a href="org/infinispan/config/CustomInterceptorConfig.html#setBeforeInterceptor(java.lang.String)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_invocationBatching"></a><h3><a name="invocationBatching"></a>invocationBatching</h3>
+<p>Defines whether invocation batching is allowed in this cache instance, and sets up internals accordingly to allow
+ use of this API.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle switch
+ (<a href="org/infinispan/config/Configuration.BooleanAttributeType.html#enabled">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_jmxStatistics"></a><h3><a name="jmxStatistics"></a>jmxStatistics</h3>
+<p>This element specifies whether cache statistics are gathered and reported via JMX.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle switch
+ (<a href="org/infinispan/config/Configuration.BooleanAttributeType.html#enabled">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_clustering_l1"></a><h3><a name="l1"></a>l1</h3>
+<p>This element configures the L1 cache behavior in 'distributed' caches instances. In any other cache modes, this
+ element is ignored.<BR/><BR />The parent element is <a href="#ce_default_clustering">&lt;clustering&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>onRehash</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If true, entries removed due to a rehash will be moved to L1 rather than being removed altogether.
+ (<a href="org/infinispan/config/Configuration.html#setL1OnRehash(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>invalidationThreshold</code></td>
+<td><code>int</code></td>
+<td>0</td>
+<td><p>
+ Determines whether a multicast or a web of unicasts are used when performing L1 invalidations.
+ </p>
+ 
+ <p>
+ By default multicast will be used.
+ </p>
+ 
+ <p>
+ If the threshold is set to -1, then unicasts will always be used. If the threshold is set to 0, then multicast 
+ will be always be used.
+ </p>
+ (<a href="org/infinispan/config/Configuration.html#setL1InvalidationThreshold(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>Toggle to enable/disable L1 cache.
+ (<a href="org/infinispan/config/Configuration.html#setL1CacheEnabled(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>lifespan</code></td>
+<td><code>long</code></td>
+<td>600000</td>
+<td>Maximum lifespan of an entry placed in the L1 cache.
+ (<a href="org/infinispan/config/Configuration.html#setL1Lifespan(long)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_lazyDeserialization"></a><h3><a name="lazyDeserialization"></a>lazyDeserialization</h3>
+<p>Deprecated configuration element. Use storeAsBinary instead.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle switch
+ (<a href="org/infinispan/config/Configuration.BooleanAttributeType.html#enabled">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_loaders_loader"></a><h3><a name="loader"></a>loader</h3>
+<p>Responsible for loading/storing cache data from/to an external source.<BR/><BR />The parent element is <a href="#ce_default_loaders">&lt;loaders&gt;</a>.  Child elements are <a href="#ce_loader_async">&lt;async&gt;</a>, <a href="#ce_loader_properties">&lt;properties&gt;</a>, <a href="#ce_loader_singletonStore">&lt;singletonStore&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>class</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Fully qualified name of a cache loader class that must implement 
+             org.infinispan.loaders.CacheLoader interface
+ (<a href="org/infinispan/loaders/AbstractCacheLoaderConfig.html#setCacheLoaderClassName(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>fetchPersistentState</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, fetch persistent state when joining a cluster. If multiple cache stores are chained,
+ only one of them can have this property enabled. Persistent state transfer with a shared cache
+ store does not make sense, as the same persistent store that provides the data will just end
+ up receiving it. Therefore, if a shared cache store is used, the cache will not allow a
+ persistent state transfer even if a cache store has this property set to true. Finally,
+ setting it to true only makes sense if in a clustered environment, and only 'replication' and
+ 'invalidation' cluster modes are supported.
+ (<a href="org/infinispan/loaders/AbstractCacheStoreConfig.html#setFetchPersistentState(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>ignoreModifications</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, any operation that modifies the cache (put, remove, clear, store...etc) won't be
+ applied to the cache store. This means that the cache store could become out of sync with the
+ cache.
+ (<a href="org/infinispan/loaders/AbstractCacheStoreConfig.html#setIgnoreModifications(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>purgeOnStartup</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, purges this cache store when it starts up.
+ (<a href="org/infinispan/loaders/AbstractCacheStoreConfig.html#setPurgeOnStartup(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>purgerThreads</code></td>
+<td><code>int</code></td>
+<td>1</td>
+<td>The number of threads to use when purging asynchronously.
+ (<a href="org/infinispan/loaders/AbstractCacheStoreConfig.html#setPurgerThreads(java.lang.Integer)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>purgeSynchronously</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, CacheStore#purgeExpired() call will be done synchronously
+ (<a href="org/infinispan/loaders/AbstractCacheStoreConfig.html#setPurgeSynchronously(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_loaders"></a><h3><a name="loaders"></a>loaders</h3>
+<p>Holds the configuration for cache loaders and stores<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  The only child element is <a href="#ce_loaders_loader">&lt;loader&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>passivation</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>
+ (<a href="org/infinispan/config/CacheLoaderManagerConfig.html#setPassivation(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>shared</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>
+ (<a href="org/infinispan/config/CacheLoaderManagerConfig.html#setShared(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>preload</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>
+ (<a href="org/infinispan/config/CacheLoaderManagerConfig.html#setPreload(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_locking"></a><h3><a name="locking"></a>locking</h3>
+<p>Defines the local, in-VM locking and concurrency characteristics of the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>useLockStriping</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, a pool of shared locks is maintained for all entries that need to be locked. Otherwise, a lock is created
+ per entry in the cache. Lock striping helps control memory footprint but may reduce concurrency in the system.
+ (<a href="org/infinispan/config/Configuration.html#setUseLockStriping(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>lockAcquisitionTimeout</code></td>
+<td><code>long</code></td>
+<td>10000</td>
+<td>Maximum time to attempt a particular lock acquisition
+ (<a href="org/infinispan/config/Configuration.html#setLockAcquisitionTimeout(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>writeSkewCheck</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>This setting is only applicable in the case of REPEATABLE_READ. When write skew check is set to false, if the
+ writer at commit time discovers that the working entry and the underlying entry have different versions, the
+ working entry will overwrite the underlying entry. If true, such version conflict - known as a write-skew - will
+ throw an Exception.
+ (<a href="org/infinispan/config/Configuration.html#setWriteSkewCheck(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>concurrencyLevel</code></td>
+<td><code>int</code></td>
+<td>32</td>
+<td>Concurrency level for lock containers. Adjust this value according to the number of concurrent threads interating
+ with Infinispan. Similar to the concurrencyLevel tuning parameter seen in the JDK's ConcurrentHashMap.
+ (<a href="org/infinispan/config/Configuration.html#setConcurrencyLevel(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>isolationLevel</code></td>
+<td><code>isolationLevel</code>* (NONE|SERIALIZABLE|REPEATABLE_READ|READ_COMMITTED|READ_UNCOMMITTED)</td>
+<td>READ_COMMITTED</td>
+<td>Cache isolation level. Infinispan only supports READ_COMMITTED or REPEATABLE_READ isolation levels. See <a
+ href='http://en.wikipedia.org/wiki/Isolation_level'>http://en.wikipedia.org/wiki/Isolation_level</a> for a
+ discussion on isolation levels.
+ (<a href="org/infinispan/config/Configuration.html#setIsolationLevel(org.infinispan.util.concurrent.IsolationLevel)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_transaction_recovery"></a><h3><a name="recovery"></a>recovery</h3>
+<p><BR/><BR />The parent element is <a href="#ce_default_transaction">&lt;transaction&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>recoveryInfoCacheName</code></td>
+<td><code>string</code></td>
+<td>__recoveryInfoCacheName__</td>
+<td>Returns the name of the cache used in order to keep recovery information.
+ (<a href="org/infinispan/config/Configuration.html#getTransactionRecoveryCacheName)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Returns true if transaction recovery information is collected.
+ (<a href="org/infinispan/config/Configuration.html#isTransactionRecoveryEnabled)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_replicationQueueScheduledExecutor"></a><h3><a name="replicationQueueScheduledExecutor"></a>replicationQueueScheduledExecutor</h3>
+<p>Configuration for the scheduled executor service used to periodically flush replication queues, used if asynchronous clustering is enabled along with useReplQueue being set to true.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_replicationQueueScheduledExecutor_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>factory</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.executors.DefaultScheduledExecutorFactory</td>
+<td>Fully qualified class name of the ScheduledExecutorFactory to use.  Must implement org.infinispan.executors.ScheduledExecutorFactory
+ (<a href="org/infinispan/config/GlobalConfiguration.ScheduledExecutorFactoryType.html#factory">Javadoc</a>)</td>
+</tr>
+</table>
+<table class="bodyTable"> <tr class="a"><th>Property</th><th>Description</th></tr>
+<tr class="b"><td>threadNamePrefix</td>
+<td>Thread name prefix for threads created by this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+<tr class="b"><td>maxThreads</td>
+<td>Maximum number of threads for this executor. Default values can be found <a href=&quot;http://community.jboss.org/docs/DOC-15540&quot;>here</a></td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_serialization"></a><h3><a name="serialization"></a>serialization</h3>
+<p>Serialization and marshalling settings.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_serialization_advancedExternalizers">&lt;advancedExternalizers&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>marshallerClass</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.marshall.VersionAwareMarshaller</td>
+<td>Fully qualified name of the marshaller to use. It must implement
+ org.infinispan.marshall.StreamingMarshaller
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setMarshallerClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>version</code></td>
+<td><code>string</code></td>
+<td>5.0</td>
+<td>Largest allowable version to use when marshalling internal state. Set this to the lowest
+ version cache instance in your cluster to ensure compatibility of communications. However,
+ setting this too low will mean you lose out on the benefit of improvements in newer versions
+ of the marshaller.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setMarshallVersion(short)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_shutdown"></a><h3><a name="shutdown"></a>shutdown</h3>
+<p>This element specifies behavior when the JVM running the cache instance shuts down.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>hookBehavior</code></td>
+<td><code>shutdownHookBehavior</code>* (DEFAULT|REGISTER|DONT_REGISTER)</td>
+<td>DEFAULT</td>
+<td>Behavior of the JVM shutdown hook registered by the cache. The options available are: DEFAULT
+ - A shutdown hook is registered even if no MBean server (apart from the JDK default) is
+ detected. REGISTER - Forces the cache to register a shutdown hook even if an MBean server is
+ detected. DONT_REGISTER - Forces the cache NOT to register a shutdown hook, even if no MBean
+ server is detected.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setShutdownHookBehavior(org.infinispan.config.GlobalConfiguration.ShutdownHookBehavior)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_loader_singletonStore"></a><h3><a name="singletonStore"></a>singletonStore</h3>
+<p>SingletonStore is a delegating cache store used for situations when only one 
+ instance in a cluster should interact with the underlying store. The coordinator of the cluster will be responsible for
+ the underlying CacheStore. SingletonStore is a simply facade to a real CacheStore implementation. It always 
+ delegates reads to the real CacheStore.<BR/><BR />The parent element is <a href="#ce_loaders_loader">&lt;loader&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, the singleton store cache store is enabled.
+ (<a href="org/infinispan/loaders/decorators/SingletonStoreConfig.html#setSingletonStoreEnabled(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>pushStateWhenCoordinator</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If true, when a node becomes the coordinator, it will transfer in-memory state to the
+ underlying cache store. This can be very useful in situations where the coordinator crashes
+ and there's a gap in time until the new coordinator is elected.
+ (<a href="org/infinispan/loaders/decorators/SingletonStoreConfig.html#setPushStateWhenCoordinator(java.lang.Boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>pushStateTimeout</code></td>
+<td><code>long</code></td>
+<td>10000</td>
+<td>If pushStateWhenCoordinator is true, this property sets the maximum number of milliseconds
+ that the process of pushing the in-memory state to the underlying cache loader should take.
+ (<a href="org/infinispan/loaders/decorators/SingletonStoreConfig.html#setPushStateTimeout(java.lang.Long)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_clustering_stateRetrieval"></a><h3><a name="stateRetrieval"></a>stateRetrieval</h3>
+<p>Configures how state is retrieved when a new cache joins the cluster. This element is only used with invalidation
+ and replication clustered modes.<BR/><BR />The parent element is <a href="#ce_default_clustering">&lt;clustering&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>maxNonProgressingLogWrites</code></td>
+<td><code>int</code></td>
+<td>100</td>
+<td>This is the maximum number of non-progressing transaction log writes after which a brute-force flush approach is
+ resorted to, to synchronize transaction logs.
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalMaxNonProgressingLogWrites(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>fetchInMemoryState</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, this will cause the cache to ask neighboring caches for state when it starts up, so the cache starts
+ 'warm', although it will impact startup time.
+ (<a href="org/infinispan/config/Configuration.html#setFetchInMemoryState(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>retryWaitTimeIncreaseFactor</code></td>
+<td><code>int</code></td>
+<td>2</td>
+<td>Wait time increase factor over successive state retrieval backoffs
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalRetryWaitTimeIncreaseFactor(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>timeout</code></td>
+<td><code>long</code></td>
+<td>240000</td>
+<td>This is the maximum amount of time - in milliseconds - to wait for state from neighboring caches, before throwing
+ an exception and aborting startup.
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalTimeout(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>logFlushTimeout</code></td>
+<td><code>long</code></td>
+<td>60000</td>
+<td>This is the maximum amount of time to run a cluster-wide flush, to allow for syncing of transaction logs.
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalLogFlushTimeout(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>initialRetryWaitTime</code></td>
+<td><code>long</code></td>
+<td>500</td>
+<td>Initial wait time when backing off before retrying state transfer retrieval
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalInitialRetryWaitTime(long)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>alwaysProvideInMemoryState</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, this will allow the cache to provide in-memory state to a neighbor, even if the cache is not configured
+ to fetch state from its neighbors (fetchInMemoryState is false)
+ (<a href="org/infinispan/config/Configuration.html#setAlwaysProvideInMemoryState(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>numRetries</code></td>
+<td><code>int</code></td>
+<td>5</td>
+<td>Number of state retrieval retries before giving up and aborting startup.
+ (<a href="org/infinispan/config/Configuration.html#setStateRetrievalNumRetries(int)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_storeAsBinary"></a><h3><a name="storeAsBinary"></a>storeAsBinary</h3>
+<p>A mechanism by which data is stored as a binary byte array. This allows
+ serialization and deserialization of objects is deferred till the point
+ in time in which they are used and needed. This typically means that any
+ deserialization happens using the thread context class loader of the
+ invocation that requires deserialization, and is an effective mechanism
+ to provide classloader isolation.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>storeKeysAsBinary</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If enabled, keys are stored as binary, in their serialized form.  If false, keys are stored as object references.
+ (<a href="org/infinispan/config/Configuration.StoreAsBinary.html#storeKeysAsBinary">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>enabled</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle switch
+ (<a href="org/infinispan/config/Configuration.BooleanAttributeType.html#enabled">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>storeValuesAsBinary</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If enabled, values are stored as binary, in their serialized form.  If false, values are stored as object references.
+ (<a href="org/infinispan/config/Configuration.StoreAsBinary.html#storeValuesAsBinary">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_clustering_sync"></a><h3><a name="sync"></a>sync</h3>
+<p>If this element is present, all communications are synchronous, in that whenever a thread sends a message sent
+ over the wire, it blocks until it receives an acknowledgment from the recipient. This element is mutually
+ exclusive with the <code> &lt;async /&gt;</code> element. <br /> <br /> Characteristics of this can be tuned
+ here.<BR/><BR />The parent element is <a href="#ce_default_clustering">&lt;clustering&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>replTimeout</code></td>
+<td><code>long</code></td>
+<td>15000</td>
+<td>This is the timeout (in ms) used to wait for an acknowledgment when making a remote call, after which the call is
+ aborted and an exception is thrown.
+ (<a href="org/infinispan/config/Configuration.html#setSyncReplTimeout(long)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_transaction"></a><h3><a name="transaction"></a>transaction</h3>
+<p>Defines transactional (JTA) characteristics of the cache.<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  The only child element is <a href="#ce_transaction_recovery">&lt;recovery&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>syncCommitPhase</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, the cluster-wide commit phase in two-phase commit (2PC) transactions will be synchronous, so Infinispan
+ will wait for responses from all nodes to which the commit was sent. Otherwise, the commit phase will be
+ asynchronous. Keeping it as false improves performance of 2PC transactions, since any remote failures are trapped
+ during the prepare phase anyway and appropriate rollbacks are issued.
+ (<a href="org/infinispan/config/Configuration.html#setSyncCommitPhase(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>transactionManagerLookupClass</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.transaction.lookup.GenericTransactionManagerLookup</td>
+<td>Fully qualified class name of a class that looks up a reference to a {@link javax.transaction.TransactionManager}.
+ The default provided is capable of locating the default TransactionManager in most popular Java EE systems, using
+ a JNDI lookup.
+ (<a href="org/infinispan/config/Configuration.html#setTransactionManagerLookupClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>eagerLockSingleNode</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Only has effect for DIST mode and when useEagerLocking is set to true. When this is enabled, then only one node is
+ locked in the cluster, disregarding numOwners config. On the opposite, if this is false, then on all cache.lock()
+ calls numOwners RPCs are being performed. The node that gets locked is the main data owner, i.e. the node where
+ data would reside if numOwners==1. If the node where the lock resides crashes, then the transaction is marked for
+ rollback - data is in a consistent state, no fault tolerance.
+ (<a href="org/infinispan/config/Configuration.html#setEagerLockSingleNode(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>cacheStopTimeout</code></td>
+<td><code>int</code></td>
+<td>30000</td>
+<td>If there are any ongoing transactions when a cache is stopped,
+ Infinispan waits for ongoing remote and local transactions to finish.
+ The amount of time to wait for is defined by the cache stop timeout.
+ It is recommended that this value does not exceed the transaction
+ timeout because even if a new transaction was started just before the
+ cache was stopped, this could only last as long as the transaction
+ timeout allows it.
+ (<a href="org/infinispan/config/Configuration.html#setCacheStopTimeout(int)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>syncRollbackPhase</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If true, the cluster-wide rollback phase in two-phase commit (2PC) transactions will be synchronous, so Infinispan
+ will wait for responses from all nodes to which the rollback was sent. Otherwise, the rollback phase will be
+ asynchronous. Keeping it as false improves performance of 2PC transactions.
+ (<a href="org/infinispan/config/Configuration.html#setSyncRollbackPhase(boolean)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>useSynchronization</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>If enabled Infinispan enlists within transactions as a {@link javax.transaction.Synchronization}. If disabled
+ (default) then Infinispan enlists as an {@link javax.transaction.xa.XAResource}, being able to fully participate
+ in distributed transaction. More about this <a href="http://community.jboss.org/wiki/Infinispantransactions#Enlisting_Synchronization">here</a>.
+ (<a href="org/infinispan/config/Configuration.html#isUseSynchronizationForTransactions)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>useEagerLocking</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Only has effect for DIST mode and when useEagerLocking is set to true. When this is enabled, then only one node is
+ locked in the cluster, disregarding numOwners config. On the opposite, if this is false, then on all cache.lock()
+ calls numOwners RPCs are being performed. The node that gets locked is the main data owner, i.e. the node where
+ data would reside if numOwners==1. If the node where the lock resides crashes, then the transaction is marked for
+ rollback - data is in a consistent state, no fault tolerance.
+ (<a href="org/infinispan/config/Configuration.html#setUseEagerLocking(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_global_transport"></a><h3><a name="transport"></a>transport</h3>
+<p>This element configures the transport used for network communications across the cluster.<BR/><BR />The parent element is <a href="#ce_infinispan_global">&lt;global&gt;</a>.  The only child element is <a href="#ce_transport_properties">&lt;properties&gt;</a>.
+</p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>machineId</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>The id of the machine where this node runs. Used for <a href="http://community.jboss.org/wiki/DesigningServerHinting">server
+ hinting</a> .
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setMachineId(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>rackId</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>The id of the rack where this node runs. Used for <a href="http://community.jboss.org/wiki/DesigningServerHinting">server
+ hinting</a> .
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setRackId(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>clusterName</code></td>
+<td><code>string</code></td>
+<td>Infinispan-Cluster</td>
+<td>Defines the name of the cluster. Nodes only connect to clusters sharing the same name.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setClusterName(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>distributedSyncTimeout</code></td>
+<td><code>long</code></td>
+<td>240000</td>
+<td>Infinispan uses a distributed lock to maintain a coherent transaction log during state transfer or rehashing, which means that only one cache can be doing state transfer or rehashing at the same time.This constraint is in place because more than one cache could be involved in a transaction.This timeout controls the time to wait to acquire acquire a lock on the distributed lock.
+ (<a href="org/infinispan/config/GlobalConfiguration.TransportType.html#distributedSyncTimeout">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>transportClass</code></td>
+<td><code>string</code></td>
+<td>org.infinispan.remoting.transport.jgroups.JGroupsTransport</td>
+<td>Fully qualified name of a class that represents a network transport. Must implement
+ org.infinispan.remoting.transport.Transport
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setTransportClass(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>nodeName</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>Name of the current node. This is a friendly name to make logs, etc. make more sense. Defaults
+ to a combination of host name and a random number (to differentiate multiple nodes on the same
+ host)
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setTransportNodeName(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>siteId</code></td>
+<td><code>string</code></td>
+<td>null</td>
+<td>The id of the site where this node runs. Used for <a href="http://community.jboss.org/wiki/DesigningServerHinting">server
+ hinting</a> .
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setSiteId(java.lang.String)">Javadoc</a>)</td>
+</tr>
+<tr class="b"><td><code>strictPeerToPeer</code></td>
+<td><code>boolean</code></td>
+<td>true</td>
+<td>If set to true, RPC operations will fail if the named cache does not exist on remote nodes
+ with a NamedCacheNotFoundException.  Otherwise, operations will succeed but it will be
+ logged on the caller that the RPC did not succeed on certain nodes due to the named cache
+ not being available.
+ (<a href="org/infinispan/config/GlobalConfiguration.html#setStrictPeerToPeer(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+<div class="section">
+<a name="ce_default_unsafe"></a><h3><a name="unsafe"></a>unsafe</h3>
+<p>Allows you to tune various unsafe or non-standard characteristics. Certain operations such as Cache.put() that are
+ supposed to return the previous value associated with the specified key according to the java.util.Map contract
+ will not fulfill this contract if unsafe toggle is turned on. Use with care. See details at
+ http://www.jboss.org/community/wiki/infinispantechnicalfaqs<BR/><BR />The parent element is <a href="#ce_infinispan_default">&lt;default&gt;</a>.  </p><table class="bodyTable"> <tr class="a"><th>Attribute</th><th>Type</th><th>Default</th><th>Description</th></tr>
+<tr class="b"><td><code>unreliableReturnValues</code></td>
+<td><code>boolean</code></td>
+<td>false</td>
+<td>Toggle to enable/disable return value fetching
+ (<a href="org/infinispan/config/Configuration.html#setUnsafeUnreliableReturnValues(boolean)">Javadoc</a>)</td>
+</tr>
+</table>
+</div>
+
+<HR />
+Copyright &#169; 2011 <a href="http://www.jboss.org">JBoss, a division of Red Hat</a>. All Rights Reserved.
+<!-- Google Analytics --> <script type='text/javascript'> var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www."); document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E")); </script> <script type='text/javascript'> try { var pageTracker = _gat._getTracker("UA-8601422-4"); pageTracker._trackPageview(); } catch(err) {}</script>
+</BODY>
+</HTML>
