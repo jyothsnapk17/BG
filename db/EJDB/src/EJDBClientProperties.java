@@ -8,4 +8,7 @@ public interface EJDBClientProperties {
 	public static final String DB_COLLECTION_MANIPULATIONS = "manipulations";
 	public static final String DB_COLLECTION_FRIENDS = "friends";
 
+	public static final String FRIEND_PENDING="pending";
+	public static final String FRIEND_CONFIRMED="confirmed";
+
 }
