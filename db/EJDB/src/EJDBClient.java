@@ -1,5 +1,6 @@
 package src;
 
+import java.io.FileOutputStream;
 import java.util.HashMap;
 import java.util.Properties;
 import java.util.Set;
@@ -18,6 +19,7 @@ import org.ejdb.driver.EJDBResultSet;
 import edu.usc.bg.base.ByteIterator;
 import edu.usc.bg.base.DB;
 import edu.usc.bg.base.DBException;
+import edu.usc.bg.base.ObjectByteIterator;
 import edu.usc.bg.base.StringByteIterator;
 
 public class EJDBClient extends DB {
@@ -48,7 +50,7 @@ public class EJDBClient extends DB {
 	public boolean init() throws DBException{
 
 		props = getProperties() ;
-		System.out.println("Properties - " + props.toString());
+//		System.out.println("Properties - " + props.toString());
 		try {
 				semaphore.acquire();
 
@@ -66,7 +68,7 @@ public class EJDBClient extends DB {
 
 					System.out.println("\tPATH : " + ejdb.getPath());
 
-					System.out.println("Creating Schema") ;
+//					System.out.println("Creating Schema") ;
 					EJDBCollection.Options collectionOpt = new EJDBCollection.Options(false,true,65535,0) ;
 					users = ejdb.ensureCollection(EJDBClientProperties.DB_COLLECTION_USERS, collectionOpt) ;
 					resources = ejdb.ensureCollection(EJDBClientProperties.DB_COLLECTION_RESOURCES, collectionOpt);
@@ -139,12 +141,13 @@ public class EJDBClient extends DB {
 			}
 
 //			//insert image
-//			if (entitySet.equalsIgnoreCase("users") && insertImage) {
-//				byte[] profileImage = ((ObjectByteIterator)values.get("pic")).toArray() ;
-//				byte[] tprofileImage = ((ObjectByteIterator)values.get("tpic")).toArray() ;
-//
-//				newObj.append("pic", profileImage).append("tpic", tprofileImage) ;
-//			}
+			if (entitySet.equalsIgnoreCase("users") && insertImage) {
+				byte[] profileImage = ((ObjectByteIterator)values.get("pic")).toArray() ;
+				byte[] tprofileImage = ((ObjectByteIterator)values.get("tpic")).toArray() ;
+
+				entity.append("pic", profileImage).append("tpic", tprofileImage) ;
+			}
+
 			if(ejdb.isOpen()) {
 //				System.out.println("Connection Open");
 /*				//check if collection exists
@@ -180,6 +183,7 @@ public class EJDBClient extends DB {
 //						System.out.println("Resources collection does not exist");
 					}
 				}
+
 			}
 			else {
 				System.out.println("Connection to EJDB not open");
@@ -196,8 +200,75 @@ public class EJDBClient extends DB {
 	public int viewProfile(int requesterID, int profileOwnerID, HashMap<String,
 			ByteIterator> result,
 			boolean insertImage, boolean testMode) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		int retVal = 0 ;
+		if(profileOwnerID < 0 || requesterID < 0) {
+			return -1 ;
+		}
+
+		EJDBCollection users = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_USERS);
+		EJDBQueryBuilder qb = new EJDBQueryBuilder();
+		qb.field("_id", String.valueOf(profileOwnerID));
+
+        BSONObject userProfile = users.createQuery(qb).findOne();
+        System.out.println(userProfile.toString());
+
+        //find number of confirmed
+        EJDBCollection friends = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_FRIENDS) ;
+        qb = new EJDBQueryBuilder() ;
+        qb.field("userid1",profileOwnerID) ;
+        qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED);
+        int confirmedFriends = friends.createQuery(qb).count();
+
+        qb = new EJDBQueryBuilder();
+        qb.field("userid2", profileOwnerID);
+        qb.field("status",EJDBClientProperties.FRIEND_CONFIRMED);
+        confirmedFriends += friends.createQuery(qb).count();
+
+        //if the user requests his/her profile, also retrieve pending friends
+        int pendingFriends = -1 ;
+        if(requesterID == profileOwnerID) {
+        	qb = new EJDBQueryBuilder();
+        	qb.field("userid2",profileOwnerID);
+        	qb.field("status",EJDBClientProperties.FRIEND_PENDING);
+        	pendingFriends = friends.createQuery(qb).count();
+        }
+
+        //get resources for user
+        EJDBCollection resources = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_RESOURCES);
+        qb = new EJDBQueryBuilder();
+        qb.field("walluserid", Integer.toString(profileOwnerID));
+        int ownedResources = resources.createQuery(qb).count();
+
+        userProfile.append("ConfFriends", Integer.toString(confirmedFriends));
+        if(requesterID == profileOwnerID){
+        	userProfile.append("PendFriends", Integer.toString(pendingFriends));
+        }
+        userProfile.append("resourcecount", Integer.toString(ownedResources));
+
+        if(userProfile != null) {
+        	for(String key:userProfile.fields()) {
+        		System.out.println(key);
+        		result.put(key, new ObjectByteIterator(userProfile.get(key).toString().getBytes())) ;
+        	}
+        }
+
+        //insert image
+        try {
+        	if(insertImage){
+        		if(testMode){
+        			//Save loaded image from database into new image file
+        			FileOutputStream outputImage = new FileOutputStream(profileOwnerID+"-mprofimage.bmp");
+        			outputImage.write(((ObjectByteIterator)userProfile.get("pic")).toArray());
+        			outputImage.close();
+        		}
+        	}
+        } catch(Exception e) {
+        	System.out.println("Could not open file to store image");
+        	retVal = -1;
+        }
+
+        return retVal;
 	}
 
 	@Override
@@ -250,7 +321,6 @@ public class EJDBClient extends DB {
 
 	@Override
 	public int inviteFriend(int inviterID, int inviteeID) {
-		// TODO Auto-generated method stub
 		BSONObject newFriendReq = new BSONObject("userid1", String.valueOf(inviterID))
 				.append("userid2", String.valueOf(inviteeID))
 				.append("status", EJDBClientProperties.FRIEND_PENDING);
@@ -367,8 +437,9 @@ public class EJDBClient extends DB {
 
 		if(friends.isExists()) {
 			//insert record
-			System.out.println(friendRecord.toString());
-			System.out.println(friends.save(friendRecord)) ;
+//			System.out.println(friendRecord.toString());
+			ObjectId recordID = friends.save(friendRecord) ;
+//			System.out.println(recordID) ;
 			return 0;
 		}
 		else
