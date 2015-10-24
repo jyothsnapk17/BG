@@ -321,16 +321,132 @@ public class EJDBClient extends DB {
 			Set<String> fields,
 			Vector<HashMap<String, ByteIterator>> result, boolean insertImage,
 			boolean testMode) {
-		// TODO Auto-generated method stub
-		return 0;
+
+		if(requesterID < 0 || profileOwnerID < 0)
+			return -1 ;
+
+		int confirmedFriends = 0 ;
+
+		try {
+			EJDBQueryBuilder qb = new EJDBQueryBuilder();
+			qb.field("userid1", String.valueOf(profileOwnerID));
+			qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED);
+
+			EJDBResultSet res = friends.createQuery(qb).find() ;
+			for(BSONObject friend:res) {
+				confirmedFriends+=1;
+				int profileID = (int) friend.get("userid2") ;
+				qb = new EJDBQueryBuilder();
+				qb.field("userid", profileID) ;
+				BSONObject userProfile = users.createQuery(qb).findOne();
+
+				for(String key: userProfile.fields()){
+					HashMap<String, ByteIterator> profile = new HashMap<String, ByteIterator>();
+					if(key.equals("_id"))
+						profile.put(key, new ObjectByteIterator(userProfile.getId().toByteArray()));
+	        		else
+	        			profile.put(key, new ObjectByteIterator(((String)userProfile.get(key)).getBytes())) ;
+					result.add(profile);
+				}
+			}
+//			confirmedFriends = friends.createQuery(qb).count();
+
+			qb = new EJDBQueryBuilder();
+			qb.field("userid2", String.valueOf(profileOwnerID));
+			qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED);
+
+			res = friends.createQuery(qb).find();
+			for(BSONObject friend:res) {
+				confirmedFriends+=1;
+
+				int profileID = (int) friend.get("userid1") ;
+				qb = new EJDBQueryBuilder();
+				qb.field("userid", profileID) ;
+				BSONObject userProfile = users.createQuery(qb).findOne();
+
+				for(String key: userProfile.fields()){
+					HashMap<String, ByteIterator> profile = new HashMap<String, ByteIterator>();
+					if(key.equals("_id"))
+						profile.put(key, new ObjectByteIterator(userProfile.getId().toByteArray()));
+	        		else
+	        			profile.put(key, new ObjectByteIterator(((String)userProfile.get(key)).getBytes())) ;
+					result.add(profile);
+				}
+
+			}
+		}
+		catch (EJDBException e) {
+			return -1 ;
+		}
+
+		return confirmedFriends ;
 	}
 
 	@Override
 	public int viewFriendReq(int profileOwnerID, Vector<HashMap<String,
 			ByteIterator>> results, boolean insertImage,
 			boolean testMode) {
-		// TODO Auto-generated method stub
-		return 0;
+
+
+		if(profileOwnerID < 0)
+			return -1 ;
+
+		int pendingFriends = 0 ;
+
+		try {
+			EJDBQueryBuilder qb = new EJDBQueryBuilder();
+			qb.field("userid1", String.valueOf(profileOwnerID));
+			qb.field("status", EJDBClientProperties.FRIEND_PENDING);
+
+			EJDBResultSet res = friends.createQuery(qb).find();
+
+			for(BSONObject friend:res) {
+				pendingFriends++ ;
+
+				int profileID = (int) friend.get("userid2") ;
+				qb = new EJDBQueryBuilder();
+				qb.field("userid", profileID) ;
+				BSONObject userProfile = users.createQuery(qb).findOne();
+
+				for(String key: userProfile.fields()){
+					HashMap<String, ByteIterator> profile = new HashMap<String, ByteIterator>();
+					if(key.equals("_id"))
+						profile.put(key, new ObjectByteIterator(userProfile.getId().toByteArray()));
+	        		else
+	        			profile.put(key, new ObjectByteIterator(((String)userProfile.get(key)).getBytes())) ;
+					results.add(profile);
+				}
+			}
+
+			qb = new EJDBQueryBuilder();
+			qb.field("userid2", String.valueOf(profileOwnerID));
+			qb.field("status", EJDBClientProperties.FRIEND_PENDING);
+
+			res = friends.createQuery(qb).find();
+
+			for(BSONObject friend:res) {
+				pendingFriends++ ;
+
+				int profileID = (int) friend.get("userid1") ;
+				qb = new EJDBQueryBuilder();
+				qb.field("userid", profileID) ;
+				BSONObject userProfile = users.createQuery(qb).findOne();
+
+				for(String key: userProfile.fields()){
+					HashMap<String, ByteIterator> profile = new HashMap<String, ByteIterator>();
+					if(key.equals("_id"))
+						profile.put(key, new ObjectByteIterator(userProfile.getId().toByteArray()));
+	        		else
+	        			profile.put(key, new ObjectByteIterator(((String)userProfile.get(key)).getBytes())) ;
+					results.add(profile);
+				}
+			}
+		}
+		catch (EJDBException e) {
+			return -1 ;
+		}
+
+		return pendingFriends ;
 	}
 
 	@Override
