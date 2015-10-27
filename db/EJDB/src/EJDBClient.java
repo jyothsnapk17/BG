@@ -199,6 +199,7 @@ public class EJDBClient extends DB {
 				if(entitySet.equalsIgnoreCase("users")) {
 					if(users.isExists()) {
 						ObjectId userID = users.save(entity);
+						users.commitTransaction();
 //						System.out.println("\nInserting into USERS - " + userID.toString());
 					}
 					else {
@@ -210,6 +211,7 @@ public class EJDBClient extends DB {
 					if(resources.isExists()) {
 //						System.out.println("Inserting into RESOURCES");
 						ObjectId resID = resources.save(entity);
+						resources.commitTransaction();
 					}
 					else {
 //						System.out.println("Resources collection does not exist");
@@ -468,6 +470,7 @@ public class EJDBClient extends DB {
 //        			.append("status", "confirmed");
 
         	friends.save(friendRec);
+        	friends.commitTransaction();
 //        	friends.save(newFriendRec);
         }
         return 0;
@@ -476,7 +479,21 @@ public class EJDBClient extends DB {
 
 	@Override
 	public int rejectFriend(int inviterID, int inviteeID) {
-		// TODO Auto-generated method stub
+		//remove entry from friends collection
+
+		if(inviterID < 0 || inviteeID < 0) {
+			return  -1;
+		}
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder();
+		qb.field("userid1", inviterID);
+		qb.field("userid2", inviteeID);
+		qb.field("status", EJDBClientProperties.FRIEND_PENDING) ;
+
+		BSONObject res = friends.createQuery(qb).findOne();
+		ObjectId recordID = res.getId() ;
+		friends.remove(recordID);
+		friends.commitTransaction();
 		return 0;
 	}
 
@@ -488,6 +505,7 @@ public class EJDBClient extends DB {
 
 		EJDBCollection friends = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_FRIENDS);
 		friends.save(newFriendReq);
+		friends.commitTransaction();
 		return 0;
 	}
 
@@ -495,13 +513,57 @@ public class EJDBClient extends DB {
 	public int viewTopKResources(int requesterID, int profileOwnerID, int k,
 			Vector<HashMap<String, ByteIterator>> result) {
 		// TODO Auto-generated method stub
+
+		if(requesterID < 0 || profileOwnerID < 0) {
+			return -1;
+		}
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
+		qb.field("walluserid", profileOwnerID);
+
+		EJDBResultSet res = resources.createQuery(qb).find();
+		if (res == null || res.length() < k){
+			return -1 ;
+		}
+		else {
+			int i=0;
+			for(BSONObject resource: res) {
+				if(i==k)
+					break;
+				HashMap<String, ByteIterator> obj = new HashMap<String, ByteIterator>() ;
+				obj.put("rid", new ObjectByteIterator(Integer.toString((int)resource.get("rid")).getBytes())) ;
+				obj.put("walluserid", new ObjectByteIterator(Integer.toString((int)resource.get("walluserid")).getBytes()));
+				obj.put("creatorid", new ObjectByteIterator(Integer.toString((int)resource.get("creatorid")).getBytes()));
+				result.add(obj);
+				i++;
+			}
+		}
+
 		return 0;
 	}
 
 	@Override
 	public int getCreatedResources(int creatorID, Vector<HashMap<String,
 			ByteIterator>> result) {
-		// TODO Auto-generated method stub
+		if(creatorID < 0) {
+			return -1;
+		}
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
+		qb.field("creatorID", creatorID);
+
+		EJDBResultSet res = resources.createQuery(qb).find();
+		if (res == null ){
+			return -1 ;
+		}
+		else {
+			for(BSONObject resource: res) {
+				HashMap<String, ByteIterator> obj = new HashMap<String, ByteIterator>() ;
+				obj.put("rid", new ObjectByteIterator(Integer.toString((int)resource.get("rid")).getBytes())) ;
+				obj.put("creatorid", new ObjectByteIterator(Integer.toString((int)resource.get("creatorid")).getBytes()));
+				result.add(obj);
+			}
+		}
 		return 0;
 	}
 
@@ -509,7 +571,23 @@ public class EJDBClient extends DB {
 	public int viewCommentOnResource(int requesterID, int profileOwnerID,
 			int resourceID,
 			Vector<HashMap<String, ByteIterator>> result) {
-		// TODO Auto-generated method stub
+
+		if(requesterID < 0 || profileOwnerID < 0 || resourceID < 0) {
+			return -1 ;
+		}
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
+		qb.field("rid", new ObjectByteIterator(Integer.toString(resourceID).getBytes()));
+
+		EJDBResultSet res = manipulations.createQuery(qb).find();
+//		Iterator<BSONObject> iter = res.iterator() ;
+		for(BSONObject comment:res) {
+			HashMap<String, ByteIterator> obj = new HashMap<String, ByteIterator>() ;
+			for(String key: comment.fields()) {
+				obj.put(key, (ObjectByteIterator)comment.get(key));
+			}
+			result.add(obj);
+		}
 		return 0;
 	}
 
@@ -517,7 +595,26 @@ public class EJDBClient extends DB {
 	public int postCommentOnResource(int commentCreatorID, int resourceCreatorID,
 			int resourceID,
 			HashMap<String, ByteIterator> values) {
-		// TODO Auto-generated method stub
+
+		if(commentCreatorID < 0 || resourceCreatorID < 0 || resourceID < 0) {
+			return -1 ;
+		}
+
+		BSONObject comment = new BSONObject();
+		comment.append("mid", values.get("mid"));
+		comment.append("creatorid", new ObjectByteIterator(Integer
+				.toString(resourceCreatorID).getBytes()));
+		comment.append("rid", new ObjectByteIterator(Integer
+				.toString(resourceID).getBytes())) ;
+		comment.append("modifierid", new ObjectByteIterator(Integer
+				.toString(commentCreatorID).getBytes()));
+		comment.append("timestamp", values.get("timestamp"));
+		comment.append("type", values.get("type"));
+		comment.append("content", values.get("content"));
+
+		manipulations.save(comment);
+		manipulations.commitTransaction();
+
 		return 0;
 	}
 
@@ -525,13 +622,56 @@ public class EJDBClient extends DB {
 	public int delCommentOnResource(int resourceCreatorID, int resourceID,
 			int manipulationID) {
 		// TODO Auto-generated method stub
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
+		qb.field("creatorid",  new ObjectByteIterator(Integer
+				.toString(resourceCreatorID).getBytes()));
+		qb.field("rid", new ObjectByteIterator(Integer
+				.toString(resourceID).getBytes()));
+		qb.field("mid", new ObjectByteIterator(Integer
+				.toString(manipulationID).getBytes()));
+
+		BSONObject res = manipulations.createQuery(qb).findOne();
+		if(res!=null) {
+			ObjectId recordID = res.getId() ;
+			manipulations.remove(recordID);
+			manipulations.commitTransaction();
+		}
+
+
 		return 0;
 	}
 
 	@Override
 	public int thawFriendship(int friendid1, int friendid2) {
-		// TODO Auto-generated method stub
+
+		if(friendid1 < 0 || friendid2 < 0) {
+			return  -1;
+		}
+
+		EJDBQueryBuilder qb = new EJDBQueryBuilder();
+		qb.field("userid1", friendid1);
+		qb.field("userid2", friendid2);
+		qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
+
+		BSONObject res = friends.createQuery(qb).findOne();
+		if(res == null) {
+			qb = new EJDBQueryBuilder() ;
+			qb.field("userid1", friendid2);
+			qb.field("userid2", friendid1);
+			qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
+			res = friends.createQuery(qb).findOne();
+		}
+		if(res == null) {
+			//no friendship exists
+			return -1 ;
+		}
+
+		ObjectId recordID = res.getId() ;
+		friends.remove(recordID);
+		friends.commitTransaction();
 		return 0;
+
 	}
 
 	@Override
@@ -598,21 +738,8 @@ public class EJDBClient extends DB {
 
 //		EJDBCollection friends = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_FRIENDS);
 		ObjectId recordID = friends.save(friendRecord) ;
-//		System.out.println(recordID) ;
-//		if(ejdb.isOpen()) {
-//			if(friends.isExists()) {
-//				//insert record
-//	//			System.out.println(friendRecord.toString());
-////				ObjectId recordID = friends.save(friendRecord) ;
-//	//			System.out.println(recordID) ;
-//				return 0;
-//			}
-//			else {
-//				System.out.println("Could not insert friendship!! ");
-////				return -1 ;
-//			}
-//		}
-//		return acceptFriend(friendid1, friendid2);
+		friends.commitTransaction();
+
 		return 0 ;
 	}
 
@@ -646,12 +773,47 @@ public class EJDBClient extends DB {
 	@Override
 	public int queryPendingFriendshipIds(int memberID, Vector<Integer> pendingIds) {
 		// TODO Auto-generated method stub
+
+		if(memberID < 0) {
+			return -1;
+		}
+		EJDBQueryBuilder qb = new EJDBQueryBuilder();
+		qb.field("userid2", memberID);
+		qb.field("status", EJDBClientProperties.FRIEND_PENDING) ;
+
+		EJDBResultSet resultSet = friends.createQuery(qb).find() ;
+		for(BSONObject friend:resultSet) {
+			pendingIds.add((int)friend.get("userid1"));
+		}
+
 		return 0;
 	}
 
 	@Override
 	public int queryConfirmedFriendshipIds(int memberID, Vector<Integer> confirmedIds) {
 		// TODO Auto-generated method stub
+
+		if(memberID < 0) {
+			return -1;
+		}
+		EJDBQueryBuilder qb = new EJDBQueryBuilder();
+		qb.field("userid2", memberID);
+		qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
+
+		EJDBResultSet resultSet = friends.createQuery(qb).find() ;
+		for(BSONObject friend:resultSet) {
+			confirmedIds.add((int)friend.get("userid1"));
+		}
+
+		qb = new EJDBQueryBuilder();
+		qb.field("userid1", memberID);
+		qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
+
+		resultSet = friends.createQuery(qb).find() ;
+		for(BSONObject friend:resultSet) {
+			confirmedIds.add((int)friend.get("userid2"));
+		}
+
 		return 0;
 	}
 
