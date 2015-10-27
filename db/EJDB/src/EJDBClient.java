@@ -199,7 +199,7 @@ public class EJDBClient extends DB {
 				if(entitySet.equalsIgnoreCase("users")) {
 					if(users.isExists()) {
 						ObjectId userID = users.save(entity);
-						users.commitTransaction();
+//						users.commitTransaction();
 //						System.out.println("\nInserting into USERS - " + userID.toString());
 					}
 					else {
@@ -211,7 +211,7 @@ public class EJDBClient extends DB {
 					if(resources.isExists()) {
 //						System.out.println("Inserting into RESOURCES");
 						ObjectId resID = resources.save(entity);
-						resources.commitTransaction();
+//						resources.commitTransaction();
 					}
 					else {
 //						System.out.println("Resources collection does not exist");
@@ -251,7 +251,9 @@ public class EJDBClient extends DB {
 		EJDBQueryBuilder qb = new EJDBQueryBuilder();
 		qb.field("userid", String.valueOf(profileOwnerID));
 
-        BSONObject userProfile = users.createQuery(qb).findOne();
+//		System.out.println("USER COUNT : " + users.createQuery(qb).count());
+
+		BSONObject userProfile = users.createQuery(qb).findOne();
 //        System.out.println(userProfile.toString());
 
         //find number of confirmed
@@ -337,9 +339,13 @@ public class EJDBClient extends DB {
 			EJDBResultSet res = friends.createQuery(qb).find() ;
 			for(BSONObject friend:res) {
 				confirmedFriends+=1;
-				int profileID = (int) friend.get("userid2") ;
+				int profileID = Integer.parseInt((String)friend.get("userid2")) ;
+//				System.out.println("USERID2 - " + profileID);
+
 				qb = new EJDBQueryBuilder();
-				qb.field("userid", profileID) ;
+				qb.field("userid",friend.get("userid2")) ;
+//				System.out.println("Users size:" + users.createQuery(new EJDBQueryBuilder()).count());
+//				System.out.println("result size : " + users.createQuery(qb).count());
 				BSONObject userProfile = users.createQuery(qb).findOne();
 
 				for(String key: userProfile.fields()){
@@ -361,9 +367,9 @@ public class EJDBClient extends DB {
 			for(BSONObject friend:res) {
 				confirmedFriends+=1;
 
-				int profileID = (int) friend.get("userid1") ;
+//				int profileID = (int) friend.get("userid1") ;
 				qb = new EJDBQueryBuilder();
-				qb.field("userid", profileID) ;
+				qb.field("userid", friend.get("userid1")) ;
 				BSONObject userProfile = users.createQuery(qb).findOne();
 
 				for(String key: userProfile.fields()){
@@ -405,9 +411,9 @@ public class EJDBClient extends DB {
 			for(BSONObject friend:res) {
 				pendingFriends++ ;
 
-				int profileID = (int) friend.get("userid2") ;
+//				int profileID = (int) friend.get("userid2") ;
 				qb = new EJDBQueryBuilder();
-				qb.field("userid", profileID) ;
+				qb.field("userid", friend.get("userid2")) ;
 				BSONObject userProfile = users.createQuery(qb).findOne();
 
 				for(String key: userProfile.fields()){
@@ -429,9 +435,9 @@ public class EJDBClient extends DB {
 			for(BSONObject friend:res) {
 				pendingFriends++ ;
 
-				int profileID = (int) friend.get("userid1") ;
+//				int profileID = (int) friend.get("userid1") ;
 				qb = new EJDBQueryBuilder();
-				qb.field("userid", profileID) ;
+				qb.field("userid", friend.get("userid1")) ;
 				BSONObject userProfile = users.createQuery(qb).findOne();
 
 				for(String key: userProfile.fields()){
@@ -470,7 +476,7 @@ public class EJDBClient extends DB {
 //        			.append("status", "confirmed");
 
         	friends.save(friendRec);
-        	friends.commitTransaction();
+//        	friends.commitTransaction();
 //        	friends.save(newFriendRec);
         }
         return 0;
@@ -481,19 +487,29 @@ public class EJDBClient extends DB {
 	public int rejectFriend(int inviterID, int inviteeID) {
 		//remove entry from friends collection
 
-		if(inviterID < 0 || inviteeID < 0) {
-			return  -1;
+		try {
+			if(inviterID < 0 || inviteeID < 0) {
+				return  -1;
+			}
+
+			EJDBQueryBuilder qb = new EJDBQueryBuilder();
+			qb.field("userid1", String.valueOf(inviterID));
+			qb.field("userid2", String.valueOf(inviteeID));
+			qb.field("status", EJDBClientProperties.FRIEND_PENDING) ;
+
+//			System.out.println("Record - " + friends.createQuery(qb).count());
+			BSONObject res = friends.createQuery(qb).findOne();
+			if(res  == null) {
+				return -1 ;
+			}
+			ObjectId recordID = res.getId() ;
+			friends.remove(recordID);
+	//		friends.commitTransaction();
+		} catch (EJDBException e){
+			System.out.println(e.getMessage());
+			return -1 ;
 		}
 
-		EJDBQueryBuilder qb = new EJDBQueryBuilder();
-		qb.field("userid1", inviterID);
-		qb.field("userid2", inviteeID);
-		qb.field("status", EJDBClientProperties.FRIEND_PENDING) ;
-
-		BSONObject res = friends.createQuery(qb).findOne();
-		ObjectId recordID = res.getId() ;
-		friends.remove(recordID);
-		friends.commitTransaction();
 		return 0;
 	}
 
@@ -505,7 +521,7 @@ public class EJDBClient extends DB {
 
 		EJDBCollection friends = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_FRIENDS);
 		friends.save(newFriendReq);
-		friends.commitTransaction();
+//		friends.commitTransaction();
 		return 0;
 	}
 
@@ -514,15 +530,20 @@ public class EJDBClient extends DB {
 			Vector<HashMap<String, ByteIterator>> result) {
 		// TODO Auto-generated method stub
 
+//		System.out.println("In viewtopkResources k = " + k);
+//		System.out.println("Resources - " + resources.createQuery(new EJDBQueryBuilder()).count()) ;
+
 		if(requesterID < 0 || profileOwnerID < 0) {
 			return -1;
 		}
 
 		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
-		qb.field("walluserid", profileOwnerID);
+		qb.field("walluserid", String.valueOf(profileOwnerID));
 
+//		System.out.println("Resources on " + profileOwnerID +"'s wall - " + resources.createQuery(qb).count());
 		EJDBResultSet res = resources.createQuery(qb).find();
-		if (res == null || res.length() < k){
+//		System.out.println("ResultSet length - " + res.length());
+		if (res == null){
 			return -1 ;
 		}
 		else {
@@ -531,14 +552,13 @@ public class EJDBClient extends DB {
 				if(i==k)
 					break;
 				HashMap<String, ByteIterator> obj = new HashMap<String, ByteIterator>() ;
-				obj.put("rid", new ObjectByteIterator(Integer.toString((int)resource.get("rid")).getBytes())) ;
-				obj.put("walluserid", new ObjectByteIterator(Integer.toString((int)resource.get("walluserid")).getBytes()));
-				obj.put("creatorid", new ObjectByteIterator(Integer.toString((int)resource.get("creatorid")).getBytes()));
+				obj.put("rid", new ObjectByteIterator(String.valueOf(resource.get("rid")).getBytes())) ;
+				obj.put("walluserid", new ObjectByteIterator(String.valueOf(resource.get("walluserid")).getBytes()));
+				obj.put("creatorid", new ObjectByteIterator(String.valueOf(resource.get("creatorid")).getBytes()));
 				result.add(obj);
 				i++;
 			}
 		}
-
 		return 0;
 	}
 
@@ -572,6 +592,7 @@ public class EJDBClient extends DB {
 			int resourceID,
 			Vector<HashMap<String, ByteIterator>> result) {
 
+		System.out.println("in viewCommentOnResource");
 		if(requesterID < 0 || profileOwnerID < 0 || resourceID < 0) {
 			return -1 ;
 		}
@@ -596,6 +617,7 @@ public class EJDBClient extends DB {
 			int resourceID,
 			HashMap<String, ByteIterator> values) {
 
+		System.out.println("Inside PostComment");
 		if(commentCreatorID < 0 || resourceCreatorID < 0 || resourceID < 0) {
 			return -1 ;
 		}
@@ -613,7 +635,7 @@ public class EJDBClient extends DB {
 		comment.append("content", values.get("content"));
 
 		manipulations.save(comment);
-		manipulations.commitTransaction();
+//		manipulations.commitTransaction();
 
 		return 0;
 	}
@@ -623,6 +645,7 @@ public class EJDBClient extends DB {
 			int manipulationID) {
 		// TODO Auto-generated method stub
 
+		System.out.println("In DelCommentOnResource");
 		EJDBQueryBuilder qb = new EJDBQueryBuilder() ;
 		qb.field("creatorid",  new ObjectByteIterator(Integer
 				.toString(resourceCreatorID).getBytes()));
@@ -645,20 +668,21 @@ public class EJDBClient extends DB {
 	@Override
 	public int thawFriendship(int friendid1, int friendid2) {
 
+//		System.out.println("In thawFriendship");
 		if(friendid1 < 0 || friendid2 < 0) {
 			return  -1;
 		}
 
 		EJDBQueryBuilder qb = new EJDBQueryBuilder();
-		qb.field("userid1", friendid1);
-		qb.field("userid2", friendid2);
+		qb.field("userid1", String.valueOf(friendid1));
+		qb.field("userid2", String.valueOf(friendid2));
 		qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
 
 		BSONObject res = friends.createQuery(qb).findOne();
 		if(res == null) {
 			qb = new EJDBQueryBuilder() ;
-			qb.field("userid1", friendid2);
-			qb.field("userid2", friendid1);
+			qb.field("userid1", String.valueOf(friendid2));
+			qb.field("userid2", String.valueOf(friendid1));
 			qb.field("status", EJDBClientProperties.FRIEND_CONFIRMED) ;
 			res = friends.createQuery(qb).findOne();
 		}
@@ -669,7 +693,7 @@ public class EJDBClient extends DB {
 
 		ObjectId recordID = res.getId() ;
 		friends.remove(recordID);
-		friends.commitTransaction();
+//		friends.commitTransaction();
 		return 0;
 
 	}
@@ -738,7 +762,7 @@ public class EJDBClient extends DB {
 
 //		EJDBCollection friends = ejdb.getCollection(EJDBClientProperties.DB_COLLECTION_FRIENDS);
 		ObjectId recordID = friends.save(friendRecord) ;
-		friends.commitTransaction();
+//		friends.commitTransaction();
 
 		return 0 ;
 	}
